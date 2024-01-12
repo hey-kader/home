@@ -86,6 +86,7 @@ wss.on ('connection', (ws) => {
 	})
 	ws.on('close', () => {
 		console.log('connection closed!')
+		ws.close()
 	})
 })
 wss.on('message', (m) => {

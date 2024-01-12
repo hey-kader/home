@@ -7,7 +7,7 @@ importScripts('./idb.js')
 			self.socket.send('start')
 		})
 		self.socket.addEventListener('message', (event) => {
-			console.log('web socket message received!', event)
+			console.log('web socket message received!', event.data)
 			self.postMessage({ws: event.data})
 		})
 		self.socket.addEventListener('close', (event) => {
