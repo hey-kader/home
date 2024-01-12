@@ -4,6 +4,9 @@ const express = require ("express")
 const https = require ("https")
 const path = require ("path")
 const fs = require ("fs")
+
+const {WebSocketServer} = require ("wss")
+
 const credentials = {
 	cert: fs.readFileSync(process.env.ssl_cert),
 	key: fs.readFileSync(process.env.ssl_cert_key)
