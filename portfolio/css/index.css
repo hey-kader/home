@@ -48,7 +48,7 @@ li {
 	list-style-type: none;
 }
 
-li:hover, button#back:hover {
+.article:hover, button#back:hover {
 	color: orange;
 }
 

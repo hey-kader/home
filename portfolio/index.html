@@ -149,6 +149,7 @@
 				let list = document.createElement('ul')
 				for (let i = 0; i < window.localStorage.length; i++) {
 					let li = document.createElement('li')
+					li.className = 'article'
 					li.appendChild(document.createTextNode(window.localStorage.key(i)))
 					li.addEventListener('mousedown', (event) => {
 						let t = document.createElement('div')
