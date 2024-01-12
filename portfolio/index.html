@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="icon" type="image/x-icon" href="favicon.ico"> <title>portfolio</title>
+	<scripts>
+		<script>
+			function values () {
+				document.getElementById('main-wrapper').innerHTML = ""
+				document.getElementById('titlet').textContent = 'values'
+				var list = document.createElement('ul')
+				let values = [
+					'love', 'truth', 'positivity', 'acceptance', 'awareness'
+				]
+				for (var value of values) {
+					let li = document.createElement('li')
+					li.appendChild(document.createTextNode(value))
+					list.appendChild(li)
+				}
+				document.getElementById('main-wrapper').appendChild(list)
+			}
+			function background () {
+
+				document.getElementById('main-wrapper').innerHTML = ""
+				document.getElementById('titlet').textContent = 'background'	
+				var list = document.createElement('ul')
+				let points = [
+					'age 24, from Lower Merion, Pennsylvania',
+					'was introduced to programming through friends in highschool',
+					'took two semester courses in java, learned c recreationally', 
+					'actively practiced website development over the course of 5 years',
+					'pretty good at react, but value the fundamentals having longer shelf life',
+					'worked on developing the bridge REPL for 1 year in Lua, in 2021',
+					'active in the ethereum community'
+				]
+				for (var point of points) {
+					let li = document.createElement('li')
+					li.appendChild(document.createTextNode(point))
+					list.appendChild(li)
+				}
+				document.getElementById('main-wrapper').appendChild(list)
+
+			}
+			function inspiration () {
+				document.getElementById('titlet').textContent = 'inspiration'	
+				document.getElementById('main-wrapper').innerHTML = ""
+				let people = [
+					"charlotte fang",
+					"shiro",
+					"sprite",
+					"campychan",
+					"satoshi tajiri",
+					"edward snowden"
+				]
+				let list = document.createElement('ul')
+				for (var person of people) {
+					let li = document.createElement('li')
+					li.appendChild(document.createTextNode(person))
+					list.appendChild(li)
+				}
+				document.getElementById('main-wrapper').appendChild(list)
+			}
+			function tooling () {
+				document.getElementById('titlet').textContent = 'tooling'	
+				document.getElementById('main-wrapper').innerHTML = ""
+				let list = document.createElement('ul')
+				let tools = [
+					"websockets",
+					"nodejs",
+					"expressjs",
+					"mongodb",
+					"apache2",
+					"indexedDB"
+				]
+				for (var tool of tools) {
+					let li = document.createElement('li')
+					li.appendChild(document.createTextNode(tool))
+					list.appendChild(li)
+				}
+				document.getElementById('main-wrapper').appendChild(list)
+			}
+			function contact () {
+				document.getElementById('titlet').textContent = 'contact'	
+				document.getElementById('main-wrapper').innerHTML = ""
+				let form = document.createElement('form')
+				let nameField = document.createElement('input')
+				nameField.id = 'message_name'
+				let nameFieldLabel = document.createElement('label')
+				nameFieldLabel.textContent = 'name: '
+				form.appendChild(nameFieldLabel)
+				form.appendChild(nameField)
+
+				let subjectField = document.createElement('input')
+				subjectField.id = 'subject'
+				let subjectFieldLabel = document.createElement('label')
+				subjectFieldLabel.textContent = 'subject: '
+				form.appendChild(subjectFieldLabel)
+				form.appendChild(subjectField)
+
+				let areaLabel = document.createElement('label')
+				areaLabel.textContent = 'message: '
+				let area = document.createElement('textarea')
+				area.style.resize = 'none'
+				area.id = 'message'
+				form.appendChild(areaLabel)
+				form.appendChild(area)
+
+				let submit = document.createElement('input')
+				submit.id = 'submit'
+				submit.setAttribute('type', 'submit')
+				submit.setAttribute('disabled', 'true')
+				submit.textContent = 'send'
+				form.appendChild(document.createElement('br'))
+				form.appendChild(submit)
+				form.addEventListener('change', (event) => {
+					if (document.getElementById('message_name').value.length || 
+						document.getElementById('message').value.length ||
+							document.getElementById('subject').value.length) {
+						submit.disabled = false
+						submit.onclick = function (event) {
+							event.preventDefault()
+							fetch(window.location.href+'contact', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								body: JSON.stringify({
+									name: nameField.value,
+									subject: subjectField.value,
+									message: area.value
+								})
+							})
+							.then((res) => {
+								window.location.replace(res.url)
+							})
+						}
+					}
+				})
+				document.getElementById('main-wrapper').appendChild(form)
+			}
+			function articlitos () {
+				document.getElementById('main-wrapper').innerHTML = ""
+				let articles = document.getElementById('articles')
+				articles.textContent = "articles"
+				let titlet = document.getElementById('titlet')
+				titlet.textContent = 'articles'
+				let list = document.createElement('ul')
+				for (let i = 0; i < window.localStorage.length; i++) {
+					let li = document.createElement('li')
+					li.appendChild(document.createTextNode(window.localStorage.key(i)))
+					li.addEventListener('mousedown', (event) => {
+						let t = document.createElement('div')
+						t.textContent = window.localStorage.getItem(li.textContent)
+						main.innerHTML = ''
+						document.getElementById('titlet').textContent = window.localStorage.key(i)
+						main.appendChild(t)
+						let back = document.createElement('button')
+						back.innerText = 'back'
+						back.id = 'back'
+						back.addEventListener('click', () => {
+							articlitos()
+							document.getElementById('titlet').textContent = 'articles'
+						})
+						main.appendChild(document.createElement('br'))
+						main.appendChild(back)
+						console.log(t)
+					})
+					list.appendChild(li)
+				}
+				var main = document.getElementById('main-wrapper')
+				main.appendChild(list)
+			}
+		</script>
+		<script type="module">
+			if (!window.localStorage.length) {
+				let r = await fetch(window.location.href+'content')
+				let articles = await r.text()
+				let a = JSON.parse(articles)
+				console.log(a)
+				a.forEach((i) => {
+					console.log(i.path)
+					window.localStorage.setItem(i.path, i.content)
+				})
+			}
+			window.worker = new Worker('update_worker.js')
+			let a = new Array ()
+			for (let i = 0; i < localStorage.length; i++) {
+				let item = localStorage.getItem(localStorage.key(i))
+				a.push(
+					localStorage.key(i), item
+				)
+			}
+			//console.log(a)
+			window.worker.postMessage({data: 'createDB', dataset: a})
+			window.worker.addEventListener('message', (event) => {
+				console.log(event)
+			})
+		</script>
+	</scripts>
+</head>
+<header>
+	<div id="topnav">
+		<a onmousedown="values()" id='values'>values</a>
+		<a onmousedown="background()" id='background'>background</a>
+		<a onmousedown="inspiration()" id='inspiration'>inspiration</a>
+		<a onmousedown="tooling()" id='tooling'>tooling</a>
+		<a onmousedown="contact()" id='contact'>contact</a>
+		<a onmousedown="articlitos()" id='articles'>articles</a>
+	</div>
+</header>
+<body>
+	<h1 id='titlet'></h1>
+	<div id="main-wrapper">
+	</div>
+</body>
+<br/>
+</html>

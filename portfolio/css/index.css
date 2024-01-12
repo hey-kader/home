@@ -1,0 +1,59 @@
+@font-face {
+	font-family: 'main';
+	src: url('font/RiiCookieRt.otf'), format('opentype');
+}
+
+* {
+	font-family: main;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+form {
+	display: inline-grid;
+	grid-template-columns: 1fr .1fr;
+	grid-template-rows: 1fr 1fr;
+}
+
+form input, textarea {
+	display: flex;
+	width: 11vw;
+	margin: 0.10em;
+	border: 0.5px solid gray;
+	border-radius: 2px;
+
+}
+textarea {
+	width: 11vw;
+	margin: 0.05em;
+	padding: 1px;
+}
+form {
+	padding: 1em;
+	border: 1px solid gray;
+	border-radius: 3px;
+	background: linear-gradient(lightblue, skyblue, skyblue, teal);
+}
+
+#submit {
+	background: linear-gradient(gray, silver,  silver, lightgray, lightgray, white);
+	margin-top: 10px;
+	border-radius: 25px;
+}
+
+li {
+	text-decoration: none;
+	list-style-type: none;
+}
+
+li:hover, button#back:hover {
+	color: orange;
+}
+
+#main-wrapper ul {
+	margin: 0;
+	padding: 0;
+	
+}
