@@ -5,7 +5,8 @@ const https = require ("https")
 const path = require ("path")
 const fs = require ("fs")
 
-const {WebSocketServer} = require ("wss")
+const WebSocket = require ("ws")
+console.log(WebSocket)
 
 const credentials = {
 	cert: fs.readFileSync(process.env.ssl_cert),
