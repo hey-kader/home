@@ -195,8 +195,12 @@
 			}
 			//console.log(a)
 			window.worker.postMessage({data: 'createDB', dataset: a})
-			window.worker.addEventListener('message', (event) => {
-				console.log(event)
+		</script>
+		<script>
+			document.addEventListener('load', () => {
+				window.worker.addEventListener('message', (event) => {
+					console.log(event)
+				})
 			})
 		</script>
 	</scripts>

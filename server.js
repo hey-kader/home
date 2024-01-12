@@ -6,7 +6,6 @@ const path = require ("path")
 const fs = require ("fs")
 
 const WebSocket = require ("ws")
-console.log(WebSocket)
 
 const credentials = {
 	cert: fs.readFileSync(process.env.ssl_cert),
@@ -73,6 +72,25 @@ app.post('/contact', (req, res) => {
 })
 
 let server = https.createServer(credentials, app)
+
+const wss = new WebSocket.Server({server: server, path: '/update'})
+
+wss.on ('connection', (ws) => {
+	console.log('new client connection')
+	ws.on ('message', (msg) => {
+		console.log('message!', msg)
+		if (msg === "start") {
+			console.log('starting listen to onchange...')
+			// listen to the articles folder, and emit a message when it is updated
+		}
+	})
+	ws.on('close', () => {
+		console.log('connection closed!')
+	})
+})
+wss.on('message', (m) => {
+	console.log(m)
+})
 
 server.listen(process.env.port, process.env.addr, () => {
 })
