@@ -9,6 +9,15 @@ class db {
 		self.request.addEventListener('success', (event) => {
 			console.log('successfully opened')
 			self.db = event.target.result
+			if (self.db.version === 1) {
+				console.warn('closed db v1')
+				self.db.close()
+				self.request = indexedDB.open('main', 2)
+				self.request.addEventListener('success', (event) => {
+					self.db = event.target.result
+					console.info(self.db)
+				})
+			}
 		})
 		self.request.addEventListener('error', (error) => {
 			console.error('E1',error)

@@ -25,7 +25,6 @@ self.addEventListener('message', (event) => {
 	if (event.data.data === 'createDB') {
 		self.db = new db()
 		self.db.init()
-		console.log(db)
 		//self.db.clear()
 	}
 })

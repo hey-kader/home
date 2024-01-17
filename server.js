@@ -74,7 +74,6 @@ app.post('/contact', (req, res) => {
 let server = https.createServer(credentials, app)
 
 const wss = new WebSocket.Server({server: server, path: '/update_worker.js'})
-
 let online = new Array ()
 
 wss.on ('connection', (ws) => {
@@ -101,5 +100,4 @@ wss.on ('connection', (ws) => {
 })
 
 server.listen(process.env.port, process.env.addr, () => {
-
 })
