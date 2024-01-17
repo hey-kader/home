@@ -173,6 +173,156 @@
 				var main = document.getElementById('main-wrapper')
 				main.appendChild(list)
 			}
+			function registration () {
+				const main = document.getElementById('main-wrapper')
+				main.innerHTML = ""
+
+				let div = document.createElement("div")
+				div.id = "registration-form-wrapper"
+				let form = document.createElement("form")
+				let username = document.createElement('input') 
+				username.setAttribute('type', 'text')
+				username.setAttribute('id', 'registration-username')
+				let username_label = document.createElement('label')
+				username_label.textContent = 'name: '
+				username_label.setAttribute('for', 'registration-username')
+				form.appendChild(username_label)
+				form.appendChild(username)
+				let password = document.createElement('input')
+				let password_label = document.createElement('label')
+				password_label.setAttribute('for','registration-password')
+				password.setAttribute('id', 'registration-password')
+				password.setAttribute('type', 'password')
+				password_label.textContent = 'password: '
+				form.appendChild(password_label)
+				form.appendChild(password)
+				form.appendChild(document.createElement('br'))
+				let submit = document.createElement('input')
+				submit.setAttribute('type', 'submit')
+				submit.setAttribute('id', 'registration-submit')
+				submit.setAttribute('disabled', true)
+				submit.textContent = 'register'
+				form.appendChild(submit)
+				div.appendChild(form)
+
+				main.appendChild(div)
+				let title = document.getElementById('titlet')
+				title.textContent = 'registration'
+				form.addEventListener('submit', (e) => {
+					e.preventDefault()
+				})
+				form.addEventListener('change', (event) => {
+					event.preventDefault()
+					let btn = document.getElementById('registration-submit')
+					let username = document.getElementById('registration-username')
+					let password = document.getElementById('registration-password')
+					if (username.value.length && password.value.length) {
+						btn.disabled = false
+						btn.addEventListener('mousedown', (ev) => {
+							let salt = window.crypto.getRandomValues(new Uint8Array(16))
+							let saltString = Array.from(salt).map(byte => byte.toString(16).padStart(2, '0')).join('')
+							let buf = new TextEncoder().encode(saltString+password.value)
+							window.crypto.subtle.digest('SHA-256', buf)
+								.then((hash) => {
+									let arr = Array.from(new Uint8Array(hash))
+									let hexarr = arr.map(b => b.toString(16).padStart(2, '0')).join('')
+									console.log('passwordhash',hexarr)
+									console.log('salt', saltString)
+									fetch(window.location.href+'register', {
+										method: "post",
+										headers: {
+											"Content-Type": "application/json"
+										},
+										body: JSON.stringify({
+											salt: saltString,
+											name: username.value,
+											hash: hexarr,
+											uuid: window.crypto.randomUUID()
+										})
+									})
+									.then(response => response.json())
+										.then((res) => {
+											console.log(res)
+											login(username.value)
+										})
+									})
+							})
+						}
+					else {
+						btn.disabled = true
+					}
+				})
+			}
+			function login (name) {
+
+				let main = document.getElementById('main-wrapper')
+				main.innerHTML = ""
+				let title = document.getElementById('titlet')
+				title.textContent = "login"
+				let div = document.createElement('div')
+				div.id = "login-form-wrapper"
+				let form = document.createElement('form')
+				form.id = "login-form"
+				let username = document.createElement('input')
+				username.id="login-username"
+				if (name) {
+					username.value = name
+					let info = document.createElement('code')
+					info.textContent = name + ' created successfully!'
+					info.id = 'infobox'
+					document.body.appendChild(info)
+					setTimeout(function () {
+						var i = 0
+						var interval = setInterval(function () {
+							if (i < 100) {
+								document.getElementById('infobox').style.opacity = 100-i+++'%'
+							}
+							else {
+								document.getElementById('infobox').remove()
+								clearInterval(interval)
+							}
+						}, 1)
+					}, 2000)
+				}
+				let username_label = document.createElement('label')
+				username_label.textContent = 'name: '
+				username.type = 'text'
+				let password = document.createElement('input')
+				password.id = 'login-password'
+				password.type="password"
+				let password_label = document.createElement('label')
+				password_label.textContent = 'password: '
+				let submit = document.createElement('input')
+				submit.type='submit'
+				submit.id = 'login-submit'
+				submit.disabled = true
+				submit.textContent = 'submit'
+				form.appendChild(username_label)
+				form.appendChild(username)
+				form.appendChild(password_label)
+				form.appendChild(password)
+				form.appendChild(document.createElement('br'))
+				form.appendChild(submit)
+				form.addEventListener('change', (event) => {
+					let username = document.getElementById('login-username')
+					let password = document.getElementById('login-password')
+					let btn = document.getElementById('login-submit')
+					form.addEventListener('submit', (ev) => {
+						ev.preventDefault()
+						console.log(username.value, password.value)
+						username.value = ""
+						password.value = ""
+						// fetch here
+					})
+					console.log(username, password)
+					if (username.value.length && password.value.length) {
+						submit.disabled = false
+					}
+				})
+				div.appendChild(form)
+				main.appendChild(div)
+
+			}
 		</script>
 		<script type="module">
 			if (!window.localStorage.length) {
@@ -193,7 +343,6 @@
 					localStorage.key(i), item
 				)
 			}
-			//console.log(a)
 			window.worker.postMessage({data: 'createDB', dataset: a})
 		</script>
 		<script>
@@ -206,6 +355,10 @@
 	</scripts>
 </head>
 <header>
+	<div id="topnav-aside">
+		<a onmousedown="registration()" id="registration">register</a>
+		<a onmousedown="login()" id="login">login</a>
+	</div>
 	<div id="topnav">
 		<a onmousedown="values()" id='values'>values</a>
 		<a onmousedown="background()" id='background'>background</a>

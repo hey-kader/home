@@ -1,5 +1,7 @@
 require ("dotenv").config()
 
+let sql = require ('./pg')
+
 const express = require ("express")
 const https = require ("https")
 const path = require ("path")
@@ -69,6 +71,14 @@ app.post('/contact', (req, res) => {
 	console.log(req.session.views)
 	console.log(req.body, req.ip)
 	res.redirect('/')
+})
+
+app.post('/register', (req, res) => {
+	console.log(req.body)
+	sql.registration(req.body)
+		.then((fin) => {
+			res.status(201).send(JSON.stringify(fin))
+		})
 })
 
 let server = https.createServer(credentials, app)
