@@ -10,7 +10,10 @@ async function registration (body) {
 }
 
 async function registrant (uuid) {
-	let qstr = `SELECT * FROM account\
+	let qstr = `SELECT\
+	(password).hash,\
+	(password).salt\
+	FROM account\
 	WHERE (owner).uuid = '${uuid}';`
 	let r = await db.query(qstr)
 	console.log(r)

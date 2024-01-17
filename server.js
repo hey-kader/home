@@ -85,7 +85,7 @@ app.post('/registrant', (req, res) => {
 	console.log(req.body)
 	sql.registrant(req.body.uuid)
 		.then((fin) => {
-			res.status(201).send(JSON.stringify(fin))
+			res.status(201).send(JSON.stringify(fin.rows))
 	})
 })
 
