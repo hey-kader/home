@@ -14,7 +14,6 @@ const credentials = {
 	key: fs.readFileSync(process.env.ssl_cert_key)
 }
 
-
 const app = express ()
 app.settings['x-powered-by'] = false
 
@@ -27,9 +26,9 @@ const MongoStore = require ("connect-mongo")
 /* middlewares */
 
 app.use(express.static(path.join(__dirname, 'portfolio')))
-
 app.use(bodyparser.json({urlencoded: true}))
 app.use(favicon(path.join(__dirname, 'portfolio', 'favicon.ico')))
+
 
 app.use(session({
 	saveUninitialized: false,
@@ -38,7 +37,7 @@ app.use(session({
 	store: 
 		MongoStore.create({
 			mongoUrl: process.env.uri 
-		})
+	})
 }))
 
 app.get ('/', (req, res) => {
@@ -90,7 +89,6 @@ app.post('/registrant', (req, res) => {
 })
 
 let server = https.createServer(credentials, app)
-
 const wss = new WebSocket.Server({server: server, path: '/update_worker.js'})
 let online = new Array ()
 

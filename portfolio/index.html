@@ -227,7 +227,7 @@
 									window.sessionStorage.setItem('uuid', window.crypto.randomUUID())
 									let arr = Array.from(new Uint8Array(hash))
 									let hexarr = arr.map(b => b.toString(16).padStart(2, '0')).join('')
-									console.log('passwordhash',hexarr)
+									console.log(hexarr, hash)
 									console.log('salt', saltString)
 									fetch(window.location.href+'register', {
 										method: "post",
@@ -283,7 +283,7 @@
 								clearInterval(interval)
 							}
 						}, 1)
-					}, 2000)
+					}, 1800)
 				}
 				let username_label = document.createElement('label')
 				username_label.textContent = 'name: '
@@ -322,7 +322,21 @@
 						})
 						.then(res => res.json())
 							.then((data) => {
-								console.warn(data)
+								console.warn(data[0])
+								let s = username.value+data[0].salt 
+								let code = new TextEncoder().encode(data[0].salt+password.value)
+								window.crypto.subtle.digest('SHA-256', code)
+									.then((hash) => {
+										let a = Array.from(new Uint8Array(hash))
+										let hexa = a.map(b => b.toString(16).padStart(2,'0')).join('')
+										console.info(` password and salt hash: ${hexa}, db hash: ${data[0].hash}`)
+										if (hexa === data[0].hash) {
+											console.warn (`login ${true}`)
+										}
+										else {
+											console.warn(`login ${false}`)
+										}
+									})
 							})
 						//username.value = ""
 						//password.value = ""
@@ -374,12 +388,14 @@
 		<a onmousedown="login()" id="login">login</a>
 	</div>
 	<div id="topnav">
-		<a onmousedown="values()" id='values'>values</a>
-		<a onmousedown="background()" id='background'>background</a>
-		<a onmousedown="inspiration()" id='inspiration'>inspiration</a>
-		<a onmousedown="tooling()" id='tooling'>tooling</a>
-		<a onmousedown="contact()" id='contact'>contact</a>
-		<a onmousedown="articlitos()" id='articles'>articles</a>
+		<nav>
+			<a onmousedown="values()" id='values'>values</a>
+			<a onmousedown="background()" id='background'>background</a>
+			<a onmousedown="inspiration()" id='inspiration'>inspiration</a>
+			<a onmousedown="tooling()" id='tooling'>tooling</a>
+			<a onmousedown="contact()" id='contact'>contact</a>
+			<a onmousedown="articlitos()" id='articles'>articles</a>
+		</nav>
 	</div>
 </header>
 <body>

@@ -16,7 +16,6 @@ async function registrant (uuid) {
 	FROM account\
 	WHERE (owner).uuid = '${uuid}';`
 	let r = await db.query(qstr)
-	console.log(r)
 	return r
 }
 
