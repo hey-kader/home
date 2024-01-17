@@ -73,25 +73,33 @@ app.post('/contact', (req, res) => {
 
 let server = https.createServer(credentials, app)
 
-const wss = new WebSocket.Server({server: server, path: '/update'})
+const wss = new WebSocket.Server({server: server, path: '/update_worker.js'})
+
+let online = new Array ()
 
 wss.on ('connection', (ws) => {
 	console.log('new client connection')
 	ws.on ('message', (msg) => {
 		console.log('message!', msg)
-		if (msg === "start") {
-			console.log('starting listen to onchange...')
+		if (msg.length === 36) {
+			ws.id = msg
+			online.push(msg)
 			// listen to the articles folder, and emit a message when it is updated
 		}
+		ws.send(online)
 	})
 	ws.on('close', () => {
-		console.log('connection closed!')
+		console.log('connection closed!', online, i)
+		for (var i = 0; i < online.length; i++) {
+			if (online[i] === ws.id) {
+				console.log(online.length)
+				online.pop(i)
+			}
+		}
 		ws.close()
 	})
 })
-wss.on('message', (m) => {
-	console.log(m)
-})
 
 server.listen(process.env.port, process.env.addr, () => {
+
 })
