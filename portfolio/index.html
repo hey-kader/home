@@ -224,6 +224,7 @@
 							let buf = new TextEncoder().encode(saltString+password.value)
 							window.crypto.subtle.digest('SHA-256', buf)
 								.then((hash) => {
+									window.sessionStorage.setItem('uuid', window.crypto.randomUUID())
 									let arr = Array.from(new Uint8Array(hash))
 									let hexarr = arr.map(b => b.toString(16).padStart(2, '0')).join('')
 									console.log('passwordhash',hexarr)
@@ -237,13 +238,13 @@
 											salt: saltString,
 											name: username.value,
 											hash: hexarr,
-											uuid: window.crypto.randomUUID()
+											uuid: window.sessionStorage.getItem('uuid')
 										})
 									})
 									.then(response => response.json())
 										.then((res) => {
 											console.log(res)
-											login(username.value)
+											login(username.value, window.sessionStorage.getItem('uuid'))
 										})
 									})
 							})
@@ -253,7 +254,7 @@
 					}
 				})
 			}
-			function login (name) {
+			function login (name, uuid) {
 
 				let main = document.getElementById('main-wrapper')
 				main.innerHTML = ""
@@ -310,8 +311,21 @@
 					form.addEventListener('submit', (ev) => {
 						ev.preventDefault()
 						console.log(username.value, password.value)
-						username.value = ""
-						password.value = ""
+						fetch(window.location.href+'registrant', {
+							method: 'post',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({
+								name: name, uuid: uuid
+							})
+						})
+						.then(res => res.json())
+							.then((data) => {
+								console.warn(data)
+							})
+						//username.value = ""
+						//password.value = ""
 						// fetch here
 					})
 					console.log(username, password)

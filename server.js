@@ -78,7 +78,15 @@ app.post('/register', (req, res) => {
 	sql.registration(req.body)
 		.then((fin) => {
 			res.status(201).send(JSON.stringify(fin))
-		})
+	})
+})
+
+app.post('/registrant', (req, res) => {
+	console.log(req.body)
+	sql.registrant(req.body.uuid)
+		.then((fin) => {
+			res.status(201).send(JSON.stringify(fin))
+	})
 })
 
 let server = https.createServer(credentials, app)

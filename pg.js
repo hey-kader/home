@@ -9,6 +9,15 @@ async function registration (body) {
 	return r
 }
 
+async function registrant (uuid) {
+	let qstr = `SELECT * FROM account\
+	WHERE (owner).uuid = '${uuid}';`
+	let r = await db.query(qstr)
+	console.log(r)
+	return r
+}
+
 module.exports = {
-	registration: registration
+	registration: registration,
+	registrant: registrant
 }
